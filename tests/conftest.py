@@ -9,6 +9,7 @@ import pytest
 
 from kestrel_router import config
 from kestrel_router.data import add_model_inputs
+from kestrel_router.model import ModelSpec, RouterModel, build_pipeline, save_model
 
 PHRASES = {
     "Repairs": ["{p} not turning on", "{p} making loud noise", "display of {p} gone blank", "{p} tripping the mcb"],
@@ -61,3 +62,23 @@ def synthetic_train() -> pd.DataFrame:
 
     df["team"] = df["team_label"].map(normalize_team)
     return df
+
+
+@pytest.fixture(scope="session")
+def trained_model(synthetic_train) -> RouterModel:
+    spec = ModelSpec("test_svc_cal", ("product_family",), "svc_cal", 1.0)
+    model = RouterModel(build_pipeline(spec)).fit(synthetic_train, synthetic_train["team"])
+    model.metadata = {
+        "spec": spec.as_dict(),
+        "input_fields": ["request_text", "product_family"],
+        "training_rows": len(synthetic_train),
+        "trained_at_utc": "test",
+    }
+    return model
+
+
+@pytest.fixture(scope="session")
+def model_path(trained_model, tmp_path_factory):
+    path = tmp_path_factory.mktemp("model") / "router.joblib"
+    save_model(trained_model, path)
+    return path
