@@ -1,0 +1,10 @@
+{
+  "name": "svc_cal_text+product",
+  "categorical": [
+    "product_family"
+  ],
+  "classifier": "svc_cal",
+  "C": 1.0,
+  "class_weight": null,
+  "use_char": true
+}
