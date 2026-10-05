@@ -27,6 +27,24 @@ pytest
 ruff check .
 ```
 
+## Reproducing predictions locally
+
+Place the assignment files in the project root; `.gitignore` keeps them out of git. Then:
+
+```bash
+python -m scripts.evaluate      # time-based model comparison; writes aggregate reports/ (about 5 min)
+python -m scripts.train         # fits the selected model on all labelled requests → models/router.joblib
+python -m scripts.predict       # writes predictions.csv, only if it passes validation
+python -m scripts.validate_submission predictions.csv
+```
+
+- **Format:** `predictions.csv` has the format of `sample_submission.csv`: header
+  `request_id,team`, one row per test request in test-file order, and only the seven current team
+  names. See [examples/predictions.example.csv](examples/predictions.example.csv), which uses
+  fictitious IDs.
+- **Not committed:** the real file is request-level output, so it is git-ignored and shared
+  privately.
+
 ## Data handling
 
 The Kestrel assignment data is confidential. Ops policy §10 forbids publishing it or uploading it
