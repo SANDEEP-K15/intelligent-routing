@@ -1,0 +1,9 @@
+# Runtime (pinned: the saved model artefact must be loaded with the same scikit-learn version)
+scikit-learn==1.8.0
+numpy==2.3.5
+scipy==1.16.3
+pandas==2.3.3
+joblib==1.5.3
+fastapi==0.142.2
+uvicorn==0.54.0
+pydantic==2.13.5

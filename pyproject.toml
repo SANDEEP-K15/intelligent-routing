@@ -1,0 +1,23 @@
+[project]
+name = "kestrel-router"
+version = "1.0.0"
+description = "Local CPU routing model for Kestrel Home service requests"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["UP007", "UP045"]
+
+[tool.ruff.lint.per-file-ignores]
+# Keyword lists and fixture phrase tables read better on one line.
+"kestrel_router/rules.py" = ["E501"]
+"tests/conftest.py" = ["E501"]

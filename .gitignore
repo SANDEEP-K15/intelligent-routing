@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------
+# Kestrel assignment data — MUST NOT be committed (ops policy §10)
+# ---------------------------------------------------------------
+train.csv
+test_unlabelled.csv
+resolution_log.csv
+teams.csv
+sample_submission.csv
+ops-policy.pdf
+email-thread.txt
+README.txt
+*.csv
+!examples/*.example.csv
+*.pdf
+*.xlsx
+*.parquet
+*.pkl
+
+# Row-level derived outputs (request IDs / customer text / per-row predictions)
+predictions.csv
+reports/private/
+
+# Trained model artefact: vocabulary is derived from customer request text.
+# Shared privately (not via a public repository).
+models/*.joblib
+
+# Python / tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Local tooling
+.claude/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
