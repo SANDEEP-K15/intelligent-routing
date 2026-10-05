@@ -21,6 +21,8 @@ paid model API.
 | [docs/evaluation-report.md](docs/evaluation-report.md) | Splits, baselines, metrics, confusion matrix, error analysis, expected score, cost |
 | [docs/data-quality.md](docs/data-quality.md) | Data-quality findings and how the pipeline handles them |
 | [docs/operations.md](docs/operations.md) | Deployment, shadow rollout, monitoring, retraining |
+| [docs/memo-to-ritu.md](docs/memo-to-ritu.md) | One-page decision memo for the client |
+| [submission-form.md](submission-form.md) | Assignment submission summary |
 
 ---
 
@@ -76,7 +78,7 @@ scripts/          evaluate · train · predict · validate_submission · smoke_t
 service/          FastAPI app + static/index.html
 tests/            pytest suite (synthetic fixtures only)
 reports/          aggregate metrics (metrics.json, evaluation_tables.md, selected_spec.json)
-docs/             decisions, evaluation report, data quality, operations
+docs/             decisions, evaluation report, data quality, operations, memo, recording checklist
 examples/         API payload and predictions-file format with fictitious IDs
 models/           README only; router.joblib is shared privately
 ```
