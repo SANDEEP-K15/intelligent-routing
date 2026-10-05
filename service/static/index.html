@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel Request Routing</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1d2433; --muted:#5b6475; --line:#d9dde5;
+          --accent:#1f5fbf; --high:#1e7a46; --medium:#9a6a00; --low:#b3261e; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#14171c; --card:#1d2128; --text:#e6e9ef; --muted:#9aa3b2; --line:#323844;
+            --accent:#6ea2ff; --high:#5cc98a; --medium:#e0b44c; --low:#ff8a80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font:15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:1.35rem; margin:0 0 4px; }
+  p.sub { margin:0 0 20px; color:var(--muted); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px; }
+  label { display:block; font-weight:600; margin:0 0 6px; }
+  textarea, select { width:100%; font:inherit; color:inherit; background:var(--bg);
+                     border:1px solid var(--line); border-radius:8px; padding:10px; }
+  textarea { min-height:96px; resize:vertical; }
+  .row { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:14px; }
+  button { margin-top:16px; font:inherit; font-weight:600; color:#fff; background:var(--accent);
+           border:0; border-radius:8px; padding:10px 18px; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  #result { margin-top:18px; }
+  .team { font-size:1.4rem; font-weight:700; margin:0; }
+  .conf { display:inline-block; margin-top:6px; font-weight:600; }
+  .conf.high { color:var(--high); } .conf.medium { color:var(--medium); } .conf.low { color:var(--low); }
+  ul { margin:12px 0 0; padding-left:20px; }
+  li { margin:4px 0; }
+  .alt, .meta { color:var(--muted); font-size:.9rem; margin-top:10px; }
+  .error { color:var(--low); font-weight:600; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Service request routing</h1>
+  <p class="sub">Paste a customer's opening message to see which team queue it would be routed to.
+     Runs locally, no external service is called.</p>
+
+  <form id="form" class="card">
+    <label for="text">Customer message</label>
+    <textarea id="text" required maxlength="2000"
+      placeholder="e.g. my purifier has been dripping since yesterday, please send someone"></textarea>
+    <div class="row">
+      <div id="f-product_family" class="hidden">
+        <label for="product_family">Product</label>
+        <select id="product_family"><option value="">Not specified</option></select>
+      </div>
+      <div id="f-channel" class="hidden">
+        <label for="channel">Channel</label>
+        <select id="channel"><option value="">Not specified</option></select>
+      </div>
+      <div id="f-warranty_status" class="hidden">
+        <label for="warranty_status">Warranty</label>
+        <select id="warranty_status"><option value="">Not specified</option></select>
+      </div>
+    </div>
+    <button id="submit" type="submit">Route request</button>
+  </form>
+
+  <section id="result" class="card hidden" aria-live="polite"></section>
+  <p id="status" class="meta"></p>
+</main>
+<script>
+const OPTIONS = {
+  product_family: ["Water Purifier","Air Fryer","Mixer Grinder","Induction Cooktop","Room Heater","Ceiling Fan","Robot Vacuum"],
+  channel: ["ivr","chat","whatsapp","email"],
+  warranty_status: ["in_warranty","shield","out_of_warranty"],
+};
+for (const [field, values] of Object.entries(OPTIONS)) {
+  const sel = document.getElementById(field);
+  for (const v of values) sel.add(new Option(v.replace(/_/g, " "), v));
+}
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// Show only the optional fields the loaded model actually uses.
+fetch("/api/health").then(r => r.json()).then(h => {
+  if (h.status !== "ok") { $("status").innerHTML = '<span class="error">' + esc(h.detail) + "</span>"; return; }
+  for (const f of h.inputs_used || []) { const el = $("f-" + f); if (el) el.classList.remove("hidden"); }
+  $("status").textContent = "Model: " + h.model + " · trained on " + h.trained_rows + " requests · cost per prediction Rs " + h.cost_per_prediction_rs;
+}).catch(() => { $("status").innerHTML = '<span class="error">Service not reachable.</span>'; });
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const body = { request_text: $("text").value };
+  for (const f of Object.keys(OPTIONS)) {
+    if (!$("f-" + f).classList.contains("hidden") && $(f).value) body[f] = $(f).value;
+  }
+  $("submit").disabled = true;
+  const out = $("result");
+  try {
+    const r = await fetch("/api/route", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body) });
+    const data = await r.json();
+    if (!r.ok) {
+      const msg = Array.isArray(data.detail) ? data.detail.map(d => d.msg).join("; ") : data.detail;
+      out.innerHTML = '<p class="error">Could not route: ' + esc(msg) + "</p>";
+    } else {
+      out.innerHTML =
+        '<p class="team">' + esc(data.team) + "</p>" +
+        '<span class="conf ' + esc(data.confidence_band) + '">Confidence ' + Math.round(data.confidence * 100) + "% (" + esc(data.confidence_band) + ")</span>" +
+        "<ul>" + data.reasons.map(x => "<li>" + esc(x) + "</li>").join("") + "</ul>" +
+        '<p class="alt">Next most likely: ' + data.alternatives.map(a => esc(a.team) + " " + Math.round(a.probability * 100) + "%").join(", ") + "</p>" +
+        '<p class="meta">Answered in ' + data.latency_ms + " ms</p>";
+    }
+    out.classList.remove("hidden");
+  } catch (err) {
+    out.innerHTML = '<p class="error">Service not reachable.</p>';
+    out.classList.remove("hidden");
+  } finally {
+    $("submit").disabled = false;
+  }
+});
+</script>
+</body>
+</html>

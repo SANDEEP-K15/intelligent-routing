@@ -73,3 +73,10 @@ def test_missing_model_fails_politely(client_without_model):
     r = client_without_model.post("/api/route", json={"request_text": "fan noise"})
     assert r.status_code == 503
     assert "scripts.train" in r.json()["detail"]
+
+
+def test_ui_served(client):
+    r = client.get("/")
+    assert r.status_code == 200
+    assert "text/html" in r.headers["content-type"]
+    assert "/api/route" in r.text

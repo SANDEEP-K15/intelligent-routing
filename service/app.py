@@ -1,6 +1,7 @@
 """Local routing service.
 
 Run:  uvicorn service.app:app --port 8000
+  GET  /             one-page UI
   GET  /api/health   model status
   POST /api/route    route one service request
 
@@ -18,11 +19,13 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from kestrel_router import __version__, config
 from kestrel_router.model import ModelArtefactError, RouterModel, load_model
 
+STATIC_DIR = Path(__file__).parent / "static"
 MAX_TEXT_LENGTH = 2000
 
 
@@ -137,3 +140,7 @@ def route(req: RouteRequest) -> RouteResponse:
         latency_ms=round((time.perf_counter() - t0) * 1000, 1),
     )
 
+
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    return FileResponse(STATIC_DIR / "index.html")
