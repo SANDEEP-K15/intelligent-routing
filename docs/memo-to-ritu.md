@@ -33,7 +33,7 @@ licence.
 
 A version trained on where requests *actually ended up* would fix most of the first two problems.
 On the same test months it cut estimated misroutes from about 166 to 107 a month, roughly
-**Rs 40,000/month** in handling cost. It would match the bot's labels only about 79% of the time,
+**Rs 41,000/month** in handling cost. It would match the bot's labels only about 79% of the time,
 so it would fail the 90% bar as currently written. That is your call, not ours. These figures are
 estimates from historical data and are not guaranteed.
 
@@ -42,7 +42,7 @@ estimates from historical data and are not guaranteed.
 | Type | Statement |
 |---|---|
 | **Measured** | 96.8% / 97.0% match with the bot's labels on two held-out quarters. 77.2% bot vs closing-team agreement over 15 months. Rs 0 model cost per request. |
-| **Estimated** | About Rs 1.16 lakh/month in current misroute cost, and about Rs 40,000/month that a final-team version might save. Both use policy §4 rates (Rs 305 per transfer, Rs 260 per extra contact) and historical transfer counts. |
+| **Estimated** | About Rs 1.16 lakh/month in current misroute cost, and about Rs 41,000/month that a final-team version might save. Both use policy §4 rates (Rs 305 per transfer, Rs 260 per extra contact) and historical transfer counts. |
 | **Assumed** | The bot routed Jul–Sep 2026 the same way it did before. We expect 95.5–97.5% on those months, but cannot measure it until the labels exist. |
 | **Needs the shadow run** | Live agreement with the bot; real transfer counts; whether low-confidence requests should go to triage. |
 
