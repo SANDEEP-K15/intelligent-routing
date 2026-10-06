@@ -32,13 +32,13 @@ Values are accuracy, with macro-F1 in brackets.
 | Majority class (always Repairs) | none | 0.289 (0.064) | 0.286 (0.064) | 0.288 |
 | Rules / keywords (teams.csv wording + 3 known bot habits) | text, product | 0.910 (0.911) | 0.917 (0.917) | 0.914 |
 | Logistic regression, word TF-IDF | text | 0.941 (0.942) | 0.949 (0.949) | 0.945 |
-| Logistic regression, word + char TF-IDF | text | 0.950 (0.950) | 0.957 (0.956) | 0.954 |
+| Logistic regression, word + char TF-IDF | text | 0.950 (0.950) | 0.957 (0.956) | 0.953 |
 | ↳ + channel, warranty | text, channel, warranty | 0.951 (0.951) | 0.953 (0.953) | 0.952 |
 | ↳ + product_family | text, product | 0.958 (0.956) | 0.968 (0.965) | 0.963 |
 | ↳ + product, balanced class weights | text, product | 0.960 (0.958) | 0.965 (0.963) | 0.963 |
 | ↳ + all three fields | text, channel, warranty, product | 0.959 (0.957) | 0.967 (0.964) | 0.963 |
-| LinearSVC (no confidence output) | text, product | 0.965 (0.964) | 0.971 (0.968) | 0.968 |
-| **LinearSVC + sigmoid calibration (selected)** | **text, product** | **0.968 (0.967)** | **0.971 (0.968)** | **0.969** |
+| LinearSVC (no confidence output) | text, product | 0.965 (0.964) | 0.970 (0.968) | 0.968 |
+| **LinearSVC + sigmoid calibration (selected)** | **text, product** | **0.968 (0.967)** | **0.970 (0.968)** | **0.969** |
 | ↳ + channel, warranty | text, channel, warranty, product | 0.967 (0.965) | 0.971 (0.968) | 0.969 |
 
 The C values tried for logistic regression (1, 3, 10, 30) are in `reports/metrics.json`.
@@ -51,7 +51,7 @@ What the comparison shows:
   bot uses the product field to send water-purifier faults and vague purifier requests to Filters &
   Consumables. In 16% of rows the field disagrees with the text, so it is kept as a separate input
   rather than replacing the text.
-- **`channel` and `warranty_status` do not help** (−0.05 to −0.15 points of mean accuracy) and are
+- **`channel` and `warranty_status` do not help** (−0.02 to −0.14 points of mean accuracy) and are
   excluded.
 - **Class weighting changes nothing material.** Classes are only mildly imbalanced (9–29%).
 - **Why the calibrated SVM:** it is the most accurate model that also gives a usable confidence.
@@ -65,7 +65,7 @@ What the comparison shows:
 | Accuracy | **0.968** | **0.970** |
 | 95% bootstrap CI | 0.961 – 0.976 | 0.963 – 0.977 |
 | Macro-F1 | 0.967 | 0.968 |
-| Monthly accuracy | Apr 0.979 · May 0.962 · Jun 0.965 | Jan 0.970 · Feb 0.964 · Mar 0.977 |
+| Monthly accuracy | Apr 0.978 · May 0.962 · Jun 0.964 | Jan 0.970 · Feb 0.964 · Mar 0.977 |
 
 ### Per team (primary fold)
 
@@ -123,7 +123,7 @@ Why the hard cases fail:
    This is about 2–3% bot noise. No model can recover it from the request, and it sets a practical
    ceiling of about 97–98%.
 2. **Water-purifier faults.** In training the bot sent purifier faults ending "…purifier not
-   working" to Filters & Consumables 92% of the time. Without that phrase, it split them 55%
+   working" to Filters & Consumables 92% of the time. Without that phrase, it split them 54%
    Repairs and 39% Filters & Consumables: close to a coin toss, which the model cannot predict.
 3. **Several issues in one message** (for example "`<p>` arrived damaged, need replacement",
    labelled Billing or Warranty Claims). The bot's choice among the issues is not consistent, and
@@ -142,7 +142,7 @@ are not reproduced here, because they contain customer messages.
 |---|---|
 | Primary-fold accuracy | 0.968 (CI 0.961–0.976) |
 | Backtest accuracy | 0.970 (CI 0.963–0.977) |
-| Range of the six validation months | 0.962 – 0.979 |
+| Range of the six validation months | 0.962 – 0.978 |
 | Practical ceiling from label noise | ≈ 0.97–0.98 |
 | Test rows whose wording was seen in training (discovery) | 93.4% (validation fold: 92.7%) |
 
@@ -169,13 +169,13 @@ evaluation**.
 | **A.** Our model matches `team_label` | **0.968** | **0.970** | |
 | **B.** Bot `team_label` matches `final_team` | 0.767 | 0.775 | **0.772** |
 | **B.** Our model matches `final_team` | 0.771 | 0.784 | |
-| Analysis only: same model trained on `final_team`, matched against `final_team` | 0.850 | 0.852 | |
+| Analysis only: same model trained on `final_team`, matched against `final_team` | 0.850 | 0.851 | |
 
 ### Agreement with `final_team` by request pattern (Apr–Jun 2026)
 
 | Pattern | Bot label | Our model | Final-team model (analysis only) |
 |---|---|---|---|
-| Clear | 0.959 | 0.967 | 0.968 |
+| Clear | 0.958 | 0.967 | 0.968 |
 | Mentions payment | 0.039 | 0.039 | 0.850 |
 | Water-purifier fault | 0.293 | 0.256 | 0.976 |
 | Vague | 0.196 | 0.196 | 0.205 |

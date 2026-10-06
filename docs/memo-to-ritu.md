@@ -18,8 +18,8 @@ lakh a year.**
 
 **One important caveat.** The bot's labels are not the same as correct routing. Across 15 months,
 the bot's first choice matched the team that finally closed the request only **77.2%** of the time.
-A replacement that copies the bot also copies its misroutes: about **165 a month**, worth roughly
-**Rs 1.15 lakh/month** in transfers and repeat contacts at policy rates. Switching saves the
+A replacement that copies the bot also copies its misroutes: about **166 a month**, worth roughly
+**Rs 1.16 lakh/month** in transfers and repeat contacts at policy rates. Switching saves the
 licence; on its own it does not reduce transfers. We are not claiming any saving beyond the
 licence.
 
@@ -42,7 +42,7 @@ estimates from historical data and are not guaranteed.
 | Type | Statement |
 |---|---|
 | **Measured** | 96.8% / 97.0% match with the bot's labels on two held-out quarters. 77.2% bot vs closing-team agreement over 15 months. Rs 0 model cost per request. |
-| **Estimated** | About Rs 1.15 lakh/month in current misroute cost, and about Rs 40,000/month that a final-team version might save. Both use policy §4 rates (Rs 305 per transfer, Rs 260 per extra contact) and historical transfer counts. |
+| **Estimated** | About Rs 1.16 lakh/month in current misroute cost, and about Rs 40,000/month that a final-team version might save. Both use policy §4 rates (Rs 305 per transfer, Rs 260 per extra contact) and historical transfer counts. |
 | **Assumed** | The bot routed Jul–Sep 2026 the same way it did before. We expect 95.5–97.5% on those months, but cannot measure it until the labels exist. |
 | **Needs the shadow run** | Live agreement with the bot; real transfer counts; whether low-confidence requests should go to triage. |
 

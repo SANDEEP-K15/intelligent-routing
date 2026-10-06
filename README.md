@@ -89,7 +89,7 @@ models/           README only; router.joblib is shared privately
   - `request_text`, cleaned;
   - `product_family`, kept because validation showed it adds 0.7–1.2 points (see below).
 - **Inputs tested and excluded:** `channel` and `warranty_status`. They add nothing:
-  - logistic regression, text only: 95.4% mean accuracy → 95.2% with channel and warranty added;
+  - logistic regression, text only: 95.3% mean accuracy → 95.2% with channel and warranty added;
   - calibrated SVM: 96.9% with product → 96.9% with all three fields.
 - **Never used (enforced in code and tests):** `first_team`, `final_team`, `transfers`,
   `resolved_at`, `team_label`, `request_id`, `created_at_ist` and `source`.
@@ -129,7 +129,7 @@ disagree, so the field is kept as a separate input rather than trusted over the 
 
 - The test file was never used for tuning.
 - The final model is refit on all 10,822 labelled rows.
-- Monthly accuracy stayed between 96.2% and 97.9% across all six validation months.
+- Monthly accuracy stayed between 96.2% and 97.8% across all six validation months.
 
 Full metrics, the confusion matrix and the error analysis are in
 [docs/evaluation-report.md](docs/evaluation-report.md). The generated tables are in

@@ -237,8 +237,9 @@ def main() -> None:
             "requests_per_month": round(len(vaf) / months, 1),
         }
         pattern_b = vaf.assign(bot_ok=bot_ok, model_ok=model_ok, alt_ok=alt_ok).groupby("pattern")[
-            ["bot_ok", "model_ok", "alt_ok"]].mean().round(4)
-        business[name]["final_team_agreement_by_pattern"] = pattern_b.to_dict(orient="index")
+            ["bot_ok", "model_ok", "alt_ok"]].mean()
+        # JSON keeps 4 decimals; the Markdown table formats the exact values (no double rounding).
+        business[name]["final_team_agreement_by_pattern"] = pattern_b.round(4).to_dict(orient="index")
         if name == "primary":
             tables.append("\n## Agreement with final_team by request pattern (primary fold)\n")
             tables.append(md_table(pattern_b.rename(columns={

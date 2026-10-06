@@ -142,7 +142,7 @@
 
 |  | bot label = final | our model = final | final_team model (analysis only) = final |
 |---|---|---|---|
-| clear | 0.959 | 0.967 | 0.968 |
+| clear | 0.958 | 0.967 | 0.968 |
 | mentions payment | 0.039 | 0.039 | 0.850 |
 | purifier fault | 0.293 | 0.256 | 0.976 |
 | vague | 0.196 | 0.196 | 0.205 |
