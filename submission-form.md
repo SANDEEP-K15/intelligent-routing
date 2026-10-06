@@ -9,7 +9,7 @@
 |---|---|
 | GitHub repository | https://github.com/SANDEEP-K15/intelligent-routing  |
 | Google Drive folder | https://drive.google.com/drive/folders/1SLMLNTJsiBRlZ8QQ_NciiOWvHQPN8zDp?usp=sharing |
-| Screen recording | https://drive.google.com/file/d/1dmSefLiUIGlYK8wfo09YM3OIu_cVmlde/view?usp=sharing |
+| Screen recording | https://drive.google.com/drive/folders/1pN1gA63C43h3bMZqGsIZbthaWf_zzSlu?usp=sharing |
 
 ## Effort
 
