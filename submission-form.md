@@ -15,7 +15,7 @@
 
 | Field | Value |
 |---|---|
-| Hours spent | Around 6-7 Hours |
+| Hours spent | 7 Hours |
 
 ## What was built
 
