@@ -15,7 +15,7 @@
 
 | Field | Value |
 |---|---|
-| Hours spent | **UPDATE BEFORE SUBMISSION:** hours not yet recorded by the candidate |
+| Hours spent | Around 6-7 Hours |
 
 ## What was built
 
