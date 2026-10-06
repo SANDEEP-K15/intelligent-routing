@@ -6,7 +6,7 @@ Usage:
 
 Checks every tracked/staged path for:
   * assignment source files, CSV/PDF/model/pickle files, env files
-  * real request IDs (SR500000–SR512999) and order numbers (KO26xxxxx)
+  * real request IDs (the SR5xxxxx range used by the data) and order numbers (KO26xxxxx)
   * likely secrets (API keys, tokens, private keys)
   * verbatim customer request text (only when the assignment CSVs are present locally)
 

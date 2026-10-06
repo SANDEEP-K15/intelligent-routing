@@ -44,9 +44,9 @@ def test_predicts_only_current_team_names(trained_model):
 
 def test_unknown_and_missing_categoricals_are_handled(trained_model):
     raw = pd.DataFrame([
-        {"request_text": "air fryer not turning on", "channel": "fax", "product_family": "Toaster",
+        {"request_text": "the air fryer is not turning on", "channel": "fax", "product_family": "Toaster",
          "warranty_status": ""},
-        {"request_text": "air fryer not turning on"},
+        {"request_text": "the air fryer is not turning on"},
     ])
     pred = trained_model.predict(raw)
     assert list(pred) == ["Repairs", "Repairs"]

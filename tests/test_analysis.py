@@ -9,8 +9,8 @@ def test_pattern_groups():
     assert pattern_group("fan stays off though i paid upfront", "Ceiling Fan") == "mentions payment"
     assert pattern_group("water purifier leaking since morning", "Water Purifier") == "purifier fault"
     assert pattern_group("someone contact me regarding the air fryer please", "Air Fryer") == "vague"
-    assert pattern_group("hello team, help purifier today", "Water Purifier") == "vague"
-    assert pattern_group("how to clean robot vacuum brushes properly", "Robot Vacuum") == "clear"
+    assert pattern_group("hello team, help ceiling fan at the earliest", "Ceiling Fan") == "vague"
+    assert pattern_group("what is the best way to wash the robot vacuum filter", "Robot Vacuum") == "clear"
 
 
 def test_multi_intent_ignores_greeting_comma():

@@ -196,7 +196,7 @@ uvicorn service.app:app --port 8000
 
 ```json
 {
-  "request_text": "good morning, water purifier not turning on",
+  "request_text": "good morning, my water purifier is leaking from the tank since yesterday",
   "product_family": "Water Purifier",
   "channel": "chat",
   "warranty_status": "in_warranty"
@@ -213,17 +213,17 @@ Response:
 ```json
 {
   "team": "Filters & Consumables",
-  "confidence": 0.958,
+  "confidence": 0.98,
   "confidence_band": "high",
   "reasons": [
-    "The request mentions \"not turning\", wording that is typically routed to Filters & Consumables.",
+    "The request mentions \"leaking\", \"since\", wording that is typically routed to Filters & Consumables.",
     "The product family is 'Water Purifier', which historically leans towards Filters & Consumables.",
     "Note: historical routing sends water-purifier faults to Filters & Consumables; most of these were finally resolved by Repairs."
   ],
-  "alternatives": [{"team": "Repairs", "probability": 0.027}, {"team": "Product Advice", "probability": 0.01}],
+  "alternatives": [{"team": "Product Advice", "probability": 0.009}, {"team": "Billing", "probability": 0.005}],
   "inputs_used": ["request_text", "product_family"],
   "model_version": "…",
-  "latency_ms": 19.5
+  "latency_ms": 11.5
 }
 ```
 
