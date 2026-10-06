@@ -7,9 +7,9 @@
 
 | Field | Value |
 |---|---|
-| GitHub repository | https://github.com/SANDEEP-K15/intelligent-routing (public). It contains code, tests, documentation and aggregate metrics only; no Kestrel data, per ops policy §10. |
-| Google Drive folder | **UPDATE BEFORE SUBMISSION:** the folder has not been created yet. Upload `predictions.csv` and `models/router.joblib` there with restricted sharing. |
-| Screen recording | **UPDATE BEFORE SUBMISSION:** the recording has not been made yet. Follow `docs/recording-checklist.md`. |
+| GitHub repository | https://github.com/SANDEEP-K15/intelligent-routing  |
+| Google Drive folder | https://drive.google.com/drive/folders/1SLMLNTJsiBRlZ8QQ_NciiOWvHQPN8zDp?usp=sharing |
+| Screen recording | https://drive.google.com/file/d/1dmSefLiUIGlYK8wfo09YM3OIu_cVmlde/view?usp=sharing |
 
 ## Effort
 
