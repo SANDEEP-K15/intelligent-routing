@@ -10,6 +10,9 @@ Checks every tracked/staged path for:
   * likely secrets (API keys, tokens, private keys)
   * verbatim customer request text (only when the assignment CSVs are present locally)
 
+One exception: the employer requires the final submission, predictions.csv, in the repository. Only that
+exact root-level path is allowed, and only if every row is `request_id,team` with a current team name.
+
 Exit code 0 = safe to publish, 1 = blocked.
 """
 
@@ -21,6 +24,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from kestrel_router.config import CURRENT_TEAMS
+
 ROOT = Path(__file__).resolve().parent.parent
 
 RESTRICTED_NAMES = {
@@ -30,6 +35,7 @@ RESTRICTED_NAMES = {
 RESTRICTED_SUFFIXES = {".csv", ".pdf", ".joblib", ".pkl", ".pickle", ".parquet", ".xlsx", ".npy", ".npz"}
 ALLOWED_EXCEPTIONS = re.compile(r"^examples/[\w.-]+\.example\.csv$")
 RESTRICTED_DIRS = {".venv", "venv", "__pycache__", ".claude", ".pytest_cache", ".ruff_cache"}
+REQUIRED_SUBMISSION = "predictions.csv"  # required by the employer; exact root-level path only
 
 CONTENT_PATTERNS = {
     "real request id": re.compile(r"\bSR5(0\d|1[0-2])\d{3}\b"),
@@ -72,6 +78,18 @@ def source_texts() -> set[str]:
     return texts
 
 
+def check_submission(content: str) -> list[str]:
+    """The allowed submission may hold request IDs and current team names only: no text, no other columns."""
+    lines = content.splitlines()
+    if not lines or lines[0] != "request_id,team":
+        return ["header must be exactly 'request_id,team'"]
+    bad = [
+        n for n, line in enumerate(lines[1:], start=2)
+        if not re.fullmatch(r"SR\d+,[^,]+", line) or line.split(",", 1)[1] not in CURRENT_TEAMS
+    ]
+    return [f"{len(bad)} row(s) are not 'request_id,team' with a current team, e.g. line {bad[0]}"] if bad else []
+
+
 def audit(ref: str | None) -> list[str]:
     problems: list[str] = []
     files = tracked_files(ref)
@@ -79,10 +97,11 @@ def audit(ref: str | None) -> list[str]:
     for path in files:
         name = Path(path).name
         suffix = Path(path).suffix.lower()
-        if name in RESTRICTED_NAMES:
+        is_submission = path == REQUIRED_SUBMISSION
+        if name in RESTRICTED_NAMES and not is_submission:
             problems.append(f"{path}: restricted assignment file")
             continue
-        if suffix in RESTRICTED_SUFFIXES and not ALLOWED_EXCEPTIONS.match(path):
+        if suffix in RESTRICTED_SUFFIXES and not (ALLOWED_EXCEPTIONS.match(path) or is_submission):
             problems.append(f"{path}: restricted file type {suffix}")
             continue
         parts = path.split("/")
@@ -92,7 +111,11 @@ def audit(ref: str | None) -> list[str]:
         content = read(path, ref)
         if path == "scripts/audit_public_repo.py":
             continue  # contains the patterns themselves
+        if is_submission:
+            problems += [f"{path}: {p}" for p in check_submission(content)]
         for label, pattern in CONTENT_PATTERNS.items():
+            if is_submission and label == "real request id":
+                continue  # the submission is keyed by request ID; its format is enforced above
             m = pattern.search(content)
             if m:
                 problems.append(f"{path}: contains {label} ({m.group(0)[:12]}...)")
